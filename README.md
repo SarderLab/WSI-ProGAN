@@ -1,9 +1,7 @@
 ## Progressive Growing of GANs for Improved Quality, Stability, and Variation<br><i>– Official TensorFlow implementation of the ICLR 2018 paper</i>
 
-**Tero Karras** (NVIDIA), **Timo Aila** (NVIDIA), **Samuli Laine** (NVIDIA), **Jaakko Lehtinen** (NVIDIA and Aalto University)
 
-* For business inquiries, please contact **[researchinquiries@nvidia.com](mailto:researchinquiries@nvidia.com)**
-* For press and other inquiries, please contact Hector Marinez at **[hmarinez@nvidia.com](mailto:hmarinez@nvidia.com)**
+This code was forked from https://github.com/tkarras/progressive_growing_of_gans and modified to work optimally on Whole Slide images WSIs by [Brendon Lutnick](https://github.com/brendonlutnick)
 
 ![Representative image](https://github.com/SarderLab/WSI-ProGAN/blob/master/representitive-image.png)<br>
 **Picture:** A patch of kidney tissue that was dreamed up by a random number generator.
