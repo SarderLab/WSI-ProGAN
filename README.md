@@ -1,4 +1,4 @@
-## Progressive Growing of GANs for Whole Slide Images<br><i>– A modified version of ProGAN for optimized training with histological Whole Slide Images</i>
+## Progressive Growing of GANs for Whole Slide Images<br><i>– A modified version of ProGAN for optimized training with histological WSIs</i>
 
 
 This code was forked from https://github.com/tkarras/progressive_growing_of_gans and modified to work optimally on Whole Slide images WSIs by [Brendon Lutnick](https://github.com/brendonlutnick)
