@@ -12,7 +12,7 @@ This code was forked from https://github.com/tkarras/progressive_growing_of_gans
 ## Resources
 
 * [ProGAN Paper (NVIDIA research)](http://research.nvidia.com/publication/2017-10_Progressive-Growing-of)
-* [Additional material (Box)](https://buffalo.box.com/s/8sl2k01svciu1a5qex4g4ziyox39204c)
+* [Additional material (UBBox)](https://buffalo.box.com/s/8sl2k01svciu1a5qex4g4ziyox39204c)
   * [Pre-trained networks (human kidney biopsies)](https://buffalo.box.com/s/2jtuzqudgs27mvo6izqosib1h979hmtn)
   * [1000 generated images](https://buffalo.box.com/s/ra5gp06kwcadpd9cefnqq0p103utip9x)
   * [Video interpolation (latent walk)](https://buffalo.box.com/s/88cxodei9u65suwxpt30a5pczj7p2d65)
@@ -42,45 +42,16 @@ Once you have imported the networks, you can call `Gs.run()` to produce a set of
 
 ## Preparing datasets for training
 
-The Progressive GAN code repository contains a command-line tool for recreating bit-exact replicas of the datasets that we used in the paper. The tool also provides various utilities for operating on the datasets:
+The Progressive GAN code repository contains a file "dataset.py" which has a custom class "WSIDataset" used to create a dataset from a folder of WSI images:
 
 ```
-usage: dataset_tool.py [-h] <command> ...
+usage: dataset.py ...
+    wsi_ext             file extension of the WSIs in the dataset folder.
 
-    display             Display images in dataset.
-    extract             Extract images from dataset.
-    compare             Compare two datasets.
-    create_mnist        Create dataset for MNIST.
-    create_mnistrgb     Create dataset for MNIST-RGB.
-    create_cifar10      Create dataset for CIFAR-10.
-    create_cifar100     Create dataset for CIFAR-100.
-    create_svhn         Create dataset for SVHN.
-    create_lsun         Create dataset for single LSUN category.
-    create_celeba       Create dataset for CelebA.
-    create_celebahq     Create dataset for CelebA-HQ.
-    create_from_images  Create dataset from a directory full of images.
-    create_from_hdf5    Create dataset from legacy HDF5 archive.
-
-Type "dataset_tool.py <command> -h" for more information.
-```
-
-The datasets are represented by directories containing the same image data in several resolutions to enable efficient streaming. There is a separate `*.tfrecords` file for each resolution, and if the dataset contains labels, they are stored in a separate file as well:
+usage: config.py ...
+    tfrecord_dir        the location of the dataset folder.
 
 ```
-> python dataset_tool.py create_cifar10 datasets/cifar10 ~/downloads/cifar10
-> ls -la datasets/cifar10
-drwxr-xr-x  2 user user         7 Feb 21 10:07 .
-drwxrwxr-x 10 user user        62 Apr  3 15:10 ..
--rw-r--r--  1 user user   4900000 Feb 19 13:17 cifar10-r02.tfrecords
--rw-r--r--  1 user user  12350000 Feb 19 13:17 cifar10-r03.tfrecords
--rw-r--r--  1 user user  41150000 Feb 19 13:17 cifar10-r04.tfrecords
--rw-r--r--  1 user user 156350000 Feb 19 13:17 cifar10-r05.tfrecords
--rw-r--r--  1 user user   2000080 Feb 19 13:17 cifar10-rxx.labels
-```
-
-The ```create_*``` commands take the standard version of a given dataset as input and produce the corresponding `*.tfrecords` files as output. Additionally, the ```create_celebahq``` command requires a set of data files representing deltas with respect to the original CelebA dataset. These deltas (27.6GB) can be downloaded from [`datasets/celeba-hq-deltas`](https://drive.google.com/open?id=0B4qLcYyJmiz0TXY1NG02bzZVRGs).
-
-**Note about module versions**: Some of the dataset commands require specific versions of Python modules and system libraries (e.g. pillow, libjpeg), and they will give an error if the versions do not match. Please heed the error messages – there is **no way** to get the commands to work other than installing these specific versions.
 
 ## Training networks
 
@@ -91,15 +62,13 @@ Once the necessary datasets are set up, you can proceed to train your own networ
 3. The results are written into a newly created subdirectory under `config.result_dir`
 4. Wait several days (or weeks) for the training to converge, and analyze the results.
 
-By default, `config.py` is configured to train a 1024x1024 network for CelebA-HQ using a single-GPU. This is expected to take about two weeks even on the highest-end NVIDIA GPUs. The key to enabling faster training is to employ multiple GPUs and/or go for a lower-resolution dataset. To this end, `config.py` contains several examples for commonly used datasets, as well as a set of "configuration presets" for multi-GPU training. All of the presets are expected to yield roughly the same image quality for CelebA-HQ, but their total training time can vary considerably:
+By default, `config.py` is configured to train a 512x512 network for CelebA-HQ using a single-GPU. This is expected to take about two weeks even on the highest-end NVIDIA GPUs. The key to enabling faster training is to employ multiple GPUs and/or go for a lower-resolution dataset. To this end, `config.py` contains several examples for commonly used datasets, as well as a set of "configuration presets" for multi-GPU training. All of the presets are expected to yield roughly the same image quality for CelebA-HQ, but their total training time can vary considerably:
 
 * `preset-v1-1gpu`: Original config that was used to produce the CelebA-HQ and LSUN results shown in the paper. Expected to take about 1 month on NVIDIA Tesla V100.
 * `preset-v2-1gpu`: Optimized config that converges considerably faster than the original one. Expected to take about 2 weeks on 1xV100.
 * `preset-v2-2gpus`: Optimized config for 2 GPUs. Takes about 1 week on 2xV100.
 * `preset-v2-4gpus`: Optimized config for 4 GPUs. Takes about 3 days on 4xV100.
 * `preset-v2-8gpus`: Optimized config for 8 GPUs. Takes about 2 days on 8xV100.
-
-For reference, the expected output of each configuration preset for CelebA-HQ can be found in [`networks/tensorflow-version/example_training_runs`](https://drive.google.com/open?id=1A9SKoQ7Xu2fqK22GHdMw8LZTh6qLvR7H)
 
 Other noteworthy config options:
 

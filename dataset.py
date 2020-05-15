@@ -35,6 +35,7 @@ def parse_tfrecord_np(record):
 class WSIDataset:
     def __init__(self,
         tfrecord_dir,               # Directory containing a collection of tfrecords files.
+        wsi_ext         = '.svs',   # extension of WSIs to look for in the dataset folder
         resolution      = 512,      # Dataset patch size (resolution)
         downsample      = 4,        # starting downsample of patches from WSI
         label_file      = None,     # Relative path of the labels file, None = autodetect.
@@ -46,6 +47,7 @@ class WSIDataset:
         num_threads     = 30):       # Number of concurrent threads.
 
         self.tfrecord_dir       = tfrecord_dir
+        self.wsi_ext            = wsi_ext
         self.resolution         = resolution
         self.downsample         = downsample
         self.resolution_log2    = None
@@ -68,7 +70,7 @@ class WSIDataset:
 
         # List tfrecords files and inspect their shapes.
         assert os.path.isdir(self.tfrecord_dir)
-        wsi_files = sorted(glob.glob(os.path.join(self.tfrecord_dir, '*.svs')))
+        wsi_files = sorted(glob.glob(os.path.join(self.tfrecord_dir, '*{}'.format(self.wsi_ext))))
         assert len(wsi_files) >= 1
         print('Found {} WSI files'.format(len(wsi_files)))
 
