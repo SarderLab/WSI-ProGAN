@@ -10,7 +10,7 @@ import glob
 import numpy as np
 import tensorflow as tf
 import tfutil
-from dataset_util import save_wsi_thumbnail_mask, get_random_wsi_batch, get_slide_label
+from dataset_util import save_wsi_thumbnail_mask, get_random_wsi_batch
 
 #----------------------------------------------------------------------------
 # Parse individual image from a tfrecords file.

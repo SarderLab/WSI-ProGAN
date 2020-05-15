@@ -3,7 +3,6 @@ import numpy as np
 import scipy
 import scipy.misc
 import openslide
-import pandas as pd
 from PIL import ImageFilter, Image
 import matplotlib.pyplot as plt
 from skimage.transform import PiecewiseAffineTransform, warp
@@ -155,16 +154,3 @@ def get_random_wsi_batch(filename, patch_size, augment=False, downsample=4):
     region = get_random_patch(wsi, l_dims, level, mask, patch_size, filename, downsample, augment)
     region_t = np.transpose(region, (2,0,1)) # [CWH]
     return region_t
-
-def get_slide_label(filename, data_label_xlsx):
-    data_label_xlsx = str(data_label_xlsx.numpy())
-    filename = str(filename.numpy())
-    # get slide label
-    df = pd.read_excel(data_label_xlsx)
-    name = filename.split('/')[-1]
-    index = df.index[df['wsi']==name].tolist()
-    if index == []:
-        label = np.array([-1])
-    else:
-        label = np.array(df['class'][index])
-    return label
